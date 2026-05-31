@@ -1,0 +1,598 @@
+/* ==========================================================================
+   01. DESIGN SYSTEM & CORE VARIABLES
+   ========================================================================== */
+:root {
+    /* Font Configurations */
+    --font-primary: 'Poppins', system-ui, -apple-system, sans-serif;
+    
+    /* Light Theme Settings */
+    --bg-gradient: linear-gradient(135deg, #fcebee 0%, #f3e5f5 100%);
+    --card-bg: rgba(255, 255, 255, 0.7);
+    --card-border: rgba(255, 255, 255, 0.6);
+    --card-shadow: 0 20px 50px rgba(244, 143, 177, 0.25), 
+                   0 5px 15px rgba(0, 0, 0, 0.05);
+    --text-main: #2d3748;
+    --text-muted: #718096;
+    --input-bg: rgba(255, 255, 255, 0.8);
+    --input-border: rgba(244, 143, 177, 0.5);
+    
+    /* Accent Gradients */
+    --accent-primary: linear-gradient(135deg, #ff4081 0%, #e040fb 100%);
+    --accent-glow: rgba(255, 64, 129, 0.4);
+    --text-gradient: linear-gradient(135deg, #d81b60 0%, #8e24aa 100%);
+    
+    /* Utility Dimensions */
+    --radius-lg: 24px;
+    --radius-md: 14px;
+    --transition-smooth: all 0.4s cubic-bezier(0.25, 1, 0.5, 1);
+    --transition-bounce: all 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+[data-theme="dark"] {
+    /* Dark Theme Settings */
+    --bg-gradient: linear-gradient(135deg, #090514 0%, #120a2a 50%, #05020a 100%);
+    --card-bg: rgba(18, 12, 34, 0.65);
+    --card-border: rgba(255, 255, 255, 0.07);
+    --card-shadow: 0 30px 60px rgba(0, 0, 0, 0.6), 
+                   0 0 40px rgba(224, 64, 251, 0.15);
+    --text-main: #f7fafc;
+    --text-muted: #a0aec0;
+    --input-bg: rgba(9, 5, 20, 0.6);
+    --input-border: rgba(224, 64, 251, 0.25);
+    
+    /* Dark Theme Accents */
+    --accent-primary: linear-gradient(135deg, #ff2a85 0%, #9d4edd 100%);
+    --accent-glow: rgba(255, 42, 133, 0.5);
+    --text-gradient: linear-gradient(135deg, #ff60a8 0%, #c77dff 100%);
+}
+
+/* ==========================================================================
+   02. RESET & FOUNDATIONS
+   ========================================================================== */
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    font-family: var(--font-primary);
+    background: var(--bg-gradient);
+    color: var(--text-main);
+    min-height: 100vh;
+    overflow-x: hidden;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    perspective: 1000px;
+    transition: background 0.6s ease;
+}
+
+/* ==========================================================================
+   03. BACKGROUND CANVAS & 3D FLOATING ANIMATIONS
+   ========================================================================== */
+.bg-canvas {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    z-index: -1;
+    overflow: hidden;
+    pointer-events: none;
+    transform-style: preserve-3d;
+}
+
+.floating-shape {
+    position: absolute;
+    border-radius: 50%;
+    filter: blur(80px);
+    opacity: 0.4;
+    mix-blend-mode: screen;
+    animation: floatGeom 20s infinite alternate ease-in-out;
+}
+
+[data-theme="light"] .floating-shape {
+    mix-blend-mode: multiply;
+    opacity: 0.15;
+}
+
+.shape-1 {
+    width: 400px;
+    height: 400px;
+    background: #ff4081;
+    top: -10%;
+    left: -10%;
+}
+
+.shape-2 {
+    width: 500px;
+    height: 500px;
+    background: #7b2cbf;
+    bottom: -15%;
+    right: -10%;
+    animation-delay: -5s;
+}
+
+.shape-3 {
+    width: 300px;
+    height: 300px;
+    background: #00f5d4;
+    top: 40%;
+    left: 50%;
+    animation-delay: -10s;
+}
+
+.floating-heart {
+    position: absolute;
+    font-size: clamp(1.5rem, 4vw, 3rem);
+    opacity: 0.25;
+    transform-style: preserve-3d;
+    animation: floatHeart 15s infinite linear;
+}
+
+[data-theme="light"] .floating-heart {
+    opacity: 0.4;
+}
+
+.heart-1 { top: 15%; left: 15%; animation-duration: 18s; }
+.heart-2 { top: 70%; left: 80%; animation-duration: 22s; animation-delay: -3s; }
+.heart-3 { top: 45%; left: 85%; animation-duration: 14s; animation-delay: -7s; }
+
+@keyframes floatGeom {
+    0% { transform: translateY(0) rotate(0deg) scale(1); }
+    100% { transform: translateY(50px) rotate(180deg) scale(1.2); }
+}
+
+@keyframes floatHeart {
+    0% { transform: translateY(100vh) rotateX(0deg) rotateY(0deg) rotateZ(0deg); opacity: 0; }
+    10% { opacity: 0.3; }
+    90% { opacity: 0.3; }
+    100% { transform: translateY(-20vh) rotateX(360deg) rotateY(360deg) rotateZ(180deg); opacity: 0; }
+}
+
+/* ==========================================================================
+   04. APP HEADER & CONTROLS
+   ========================================================================== */
+.app-header {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    padding: 2rem 3rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    z-index: 10;
+}
+
+.logo {
+    font-size: 1.5rem;
+    font-weight: 800;
+    letter-spacing: -0.5px;
+}
+
+.logo span {
+    color: #ff2a85;
+}
+
+.theme-toggle-btn {
+    background: var(--card-bg);
+    border: 1px solid var(--card-border);
+    color: var(--text-main);
+    width: 48px;
+    height: 48px;
+    border-radius: 50%;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: var(--card-shadow);
+    transition: var(--transition-bounce);
+    position: relative;
+    overflow: hidden;
+}
+
+.theme-toggle-btn:hover {
+    transform: scale(1.1) rotate(15deg);
+    border-color: #ff2a85;
+}
+
+.theme-toggle-btn svg {
+    width: 20px;
+    height: 20px;
+    position: absolute;
+    transition: var(--transition-bounce);
+}
+
+[data-theme="dark"] .sun-icon { transform: translateY(40px); opacity: 0; }
+[data-theme="dark"] .moon-icon { transform: translateY(0); opacity: 1; }
+[data-theme="light"] .sun-icon { transform: translateY(0); opacity: 1; }
+[data-theme="light"] .moon-icon { transform: translateY(-40px); opacity: 0; }
+
+/* ==========================================================================
+   05. SYSTEM COMPONENT CARD LAYOUTS (GLASSMORPHISM)
+   ========================================================================== */
+.app-container {
+    width: 100%;
+    max-width: 540px;
+    padding: 1.5rem;
+    margin-top: 4rem;
+}
+
+.card {
+    background: var(--card-bg);
+    backdrop-filter: blur(25px);
+    -webkit-backdrop-filter: blur(25px);
+    border: 1px solid var(--card-border);
+    border-radius: var(--radius-lg);
+    box-shadow: var(--card-shadow);
+    padding: 3rem 2.5rem;
+    position: relative;
+    transform-style: preserve-3d;
+    transition: transform 0.1s ease, opacity 0.4s ease, visibility 0.4s ease;
+}
+
+.card.hidden {
+    opacity: 0;
+    visibility: hidden;
+    position: absolute;
+    pointer-events: none;
+    transform: scale(0.9) translateY(30px);
+}
+
+.card.active {
+    opacity: 1;
+    visibility: visible;
+    position: relative;
+    pointer-events: auto;
+    transform: scale(1) translateY(0);
+}
+
+.card-glow {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    border-radius: var(--radius-lg);
+    background: radial-gradient(circle at var(--mx, 50%) var(--my, 50%), rgba(255, 64, 129, 0.15) 0%, transparent 60%);
+    pointer-events: none;
+    z-index: 1;
+}
+
+.card-content {
+    position: relative;
+    z-index: 2;
+    transform: translateZ(30px); /* 3D depth layer allocation */
+}
+
+/* Typography Hierarchy inside Cards */
+h1 {
+    font-size: clamp(2rem, 5vw, 2.5rem);
+    font-weight: 800;
+    letter-spacing: -1px;
+    line-height: 1.2;
+    margin-bottom: 0.75rem;
+    text-align: center;
+}
+
+.gradient-text {
+    background: var(--text-gradient);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
+
+.subtitle {
+    color: var(--text-muted);
+    font-size: 0.95rem;
+    text-align: center;
+    margin-bottom: 2.5rem;
+    line-height: 1.5;
+}
+
+/* ==========================================================================
+   06. INTERACTIVE FORMS & INPUT CONTROLS
+   ========================================================================== */
+.input-group {
+    margin-bottom: 0;
+}
+
+.input-group label {
+    display: block;
+    font-size: 0.85rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    margin-bottom: 0.5rem;
+    color: var(--text-muted);
+    padding-left: 4px;
+}
+
+.input-wrapper {
+    position: relative;
+}
+
+.input-wrapper input {
+    width: 100%;
+    padding: 1.1rem 1.25rem;
+    background: var(--input-bg);
+    border: 1px solid var(--input-border);
+    border-radius: var(--radius-md);
+    font-family: var(--font-primary);
+    font-size: 1.1rem;
+    color: var(--text-main);
+    outline: none;
+    transition: var(--transition-smooth);
+    box-shadow: inset 0 2px 4px rgba(0,0,0,0.02);
+}
+
+.input-wrapper input:focus {
+    border-color: transparent;
+    box-shadow: 0 0 0 3px var(--accent-glow);
+}
+
+.input-focus-line {
+    position: absolute;
+    bottom: 0;
+    left: 50%;
+    width: 0;
+    height: 2px;
+    background: var(--accent-primary);
+    transition: var(--transition-smooth);
+    transform: translateX(-50%);
+}
+
+.input-wrapper input:focus ~ .input-focus-line {
+    width: calc(100% - 28px);
+    border-radius: 2px;
+}
+
+/* Inter-Input Visual Elements */
+.form-divider {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 1.5rem 0;
+}
+
+.divider-line {
+    flex: 1;
+    height: 1px;
+    background: var(--card-border);
+}
+
+.divider-icon {
+    margin: 0 1rem;
+    font-size: 1.2rem;
+    animation: rhythmicPulse 2s infinite ease-in-out;
+}
+
+/* High Performance Dynamic Buttons */
+.btn-primary, .btn-secondary {
+    width: 100%;
+    padding: 1.1rem;
+    border: none;
+    border-radius: var(--radius-md);
+    font-family: var(--font-primary);
+    font-size: 1.1rem;
+    font-weight: 600;
+    cursor: pointer;
+    position: relative;
+    overflow: hidden;
+    transition: var(--transition-bounce);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.btn-primary {
+    background: var(--accent-primary);
+    color: #fff;
+    box-shadow: 0 10px 25px var(--accent-glow);
+    margin-top: 2.5rem;
+}
+
+.btn-primary span, .btn-secondary span {
+    position: relative;
+    z-index: 2;
+}
+
+.btn-glow {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+    transform: translateX(-100%);
+    z-index: 1;
+}
+
+.btn-primary:hover {
+    transform: translateY(-3px) scale(1.02);
+    box-shadow: 0 15px 30px var(--accent-glow);
+}
+
+.btn-primary:hover .btn-glow {
+    transform: translateX(100%);
+    transition: transform 0.8s ease;
+}
+
+.btn-primary:active {
+    transform: translateY(-1px) scale(0.99);
+}
+
+.btn-secondary {
+    background: transparent;
+    border: 1px solid var(--input-border);
+    color: var(--text-main);
+    margin-top: 2rem;
+}
+
+.btn-secondary:hover {
+    background: rgba(255, 64, 129, 0.05);
+    border-color: #ff4081;
+    transform: translateY(-2px);
+}
+
+/* ==========================================================================
+   07. CALCULATING / PROCESSING VIEW STATE
+   ========================================================================== */
+.processing-layout {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 2rem 0;
+}
+
+.pulse-container {
+    position: relative;
+    width: 100px;
+    height: 100px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-bottom: 2rem;
+}
+
+.pulse-heart {
+    font-size: 3.5rem;
+    z-index: 2;
+    animation: coreHeartbeat 0.8s infinite alternate cubic-bezier(0.215, 0.610, 0.355, 1);
+}
+
+.pulse-ring {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    border-radius: 50%;
+    background: var(--accent-primary);
+    opacity: 0.4;
+    z-index: 1;
+    animation: ringEmit 2s infinite cubic-bezier(0.165, 0.84, 0.44, 1);
+}
+
+.ring-2 {
+    animation-delay: 0.5s;
+}
+
+.live-counter-box {
+    font-size: 4rem;
+    font-weight: 800;
+    margin: 1rem 0;
+    font-variant-numeric: tabular-nums;
+    background: var(--text-gradient);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
+
+.percent-sign {
+    font-size: 2rem;
+    font-weight: 600;
+}
+
+.loading-status {
+    color: var(--text-muted);
+    font-size: 0.9rem;
+    font-style: italic;
+    height: 20px;
+}
+
+@keyframes coreHeartbeat {
+    0% { transform: scale(0.95); }
+    100% { transform: scale(1.15); }
+}
+
+@keyframes ringEmit {
+    0% { transform: scale(0.8); opacity: 0.5; }
+    100% { transform: scale(2.2); opacity: 0; }
+}
+
+/* ==========================================================================
+   08. RESULTS VIEW & METERS
+   ========================================================================== */
+.results-layout {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+}
+
+.badge {
+    background: rgba(255, 64, 129, 0.1);
+    color: #ff4081;
+    padding: 0.4rem 1rem;
+    border-radius: 50px;
+    font-size: 0.75rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 1.5px;
+    display: inline-block;
+    margin-bottom: 0.75rem;
+    border: 1px solid rgba(255, 64, 129, 0.2);
+}
+
+#result-names-heading {
+    font-size: 1.8rem;
+    font-weight: 800;
+    margin-bottom: 2rem;
+    word-break: break-word;
+}
+
+/* SVG Geometric Circle Render */
+.progress-ring-container {
+    position: relative;
+    width: 220px;
+    height: 220px;
+    margin-bottom: 2rem;
+}
+
+.progress-ring {
+    transform: rotate(-90deg);
+}
+
+.progress-ring-bg {
+    stroke: var(--card-border);
+}
+
+.progress-ring-bar {
+    stroke: url(#gradient-id); /* Fallback configuration injection via script */
+    stroke-linecap: round;
+    stroke-dasharray: 596.9; /* 2 * PI * r (r=95) */
+    stroke-dashoffset: 596.9;
+    transition: stroke-dashoffset 2s cubic-bezier(0.165, 0.84, 0.44, 1);
+}
+
+/* Injecting pure hardware gradient profile dynamically */
+[data-theme="dark"] .progress-ring-bar { stroke: #ff2a85; filter: drop-shadow(0 0 12px rgba(255,42,133,0.8)); }
+[data-theme="light"] .progress-ring-bar { stroke: #d81b60; filter: drop-shadow(0 4px 8px rgba(216,27,96,0.3)); }
+
+.progress-display {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    display: flex;
+    align-items: baseline;
+    font-variant-numeric: tabular-nums;
+}
+
+#final-percentage {
+    font-size: 4.5rem;
+    font-weight: 800;
+    letter-spacing: -2px;
+}
+
+.progress-display .suffix {
+    font-size: 1.75rem;
+    font-weight: 600;
+    color: var(--text-muted);
+    margin-left: 2px;
+}
+
+.result-tier-box {
+    background: rgba(255, 255, 255, 0.03);
+    border: 1px solid var(--card-border);
+    border-radius: var;}

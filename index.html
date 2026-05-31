@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AuraMatch // Ultra-Modern Love Tester</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="bg-canvas" aria-hidden="true">
+        <div class="floating-shape shape-1"></div>
+        <div class="floating-shape shape-2"></div>
+        <div class="floating-shape shape-3"></div>
+        <div class="floating-heart heart-1">❤️</div>
+        <div class="floating-heart heart-2">💖</div>
+        <div class="floating-heart heart-3">💝</div>
+    </div>
+
+    <header class="app-header">
+        <div class="logo">AuraMatch<span>.</span></div>
+        <button id="theme-toggle" class="theme-toggle-btn" aria-label="Toggle light and dark theme">
+            <svg class="sun-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="5"></circle><line x1="12" y1="1" x2="12" y2="3"></line><line x1="12" y1="21" x2="12" y2="23"></line><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line><line x1="1" y1="12" x2="3" y2="12"></line><line x1="21" y1="12" x2="23" y2="12"></line><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line></svg>
+            <svg class="moon-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path></svg>
+        </button>
+    </header>
+
+    <main class="app-container">
+        
+        <section id="view-input" class="card active" data-tilt-target>
+            <div class="card-glow"></div>
+            <div class="card-content">
+                <h1>Discover Your <span class="gradient-text">Affinity Aura</span></h1>
+                <p class="subtitle">Enter two names to project their deterministic algorithmic resonance.</p>
+                
+                <form id="love-form" novalidate>
+                    <div class="input-group">
+                        <label for="name1">Your Name</label>
+                        <div class="input-wrapper">
+                            <input type="text" id="name1" autocomplete="off" placeholder="e.g., Asghar" required>
+                            <span class="input-focus-line"></span>
+                        </div>
+                    </div>
+
+                    <div class="form-divider">
+                        <div class="divider-line"></div>
+                        <div class="divider-icon">⚡</div>
+                        <div class="divider-line"></div>
+                    </div>
+
+                    <div class="input-group">
+                        <label for="name2">Partner's Name</label>
+                        <div class="input-wrapper">
+                            <input type="text" id="name2" autocomplete="off" placeholder="e.g., Sarah" required>
+                            <span class="input-focus-line"></span>
+                        </div>
+                    </div>
+
+                    <button type="submit" id="btn-submit" class="btn-primary">
+                        <span>Analyze Resonance</span>
+                        <div class="btn-glow"></div>
+                    </button>
+                </form>
+            </div>
+        </section>
+
+        <section id="view-loading" class="card hidden">
+            <div class="card-glow"></div>
+            <div class="card-content processing-layout">
+                <div class="pulse-container">
+                    <div class="pulse-ring ring-1"></div>
+                    <div class="pulse-ring ring-2"></div>
+                    <div class="pulse-heart">❤️</div>
+                </div>
+                <h2>Calibrating Matrix...</h2>
+                <div class="live-counter-box">
+                    <span id="live-counter">0</span><span class="percent-sign">%</span>
+                </div>
+                <p class="loading-status" id="loading-status">Mapping standard charCodes...</p>
+            </div>
+        </section>
+
+        <section id="view-results" class="card hidden" data-tilt-target>
+            <div class="card-glow"></div>
+            <div class="card-content results-layout">
+                <div class="results-header">
+                    <span class="badge">Analysis Complete</span>
+                    <h2 id="result-names-heading">Waqas & Sarah</h2>
+                </div>
+
+                <div class="progress-ring-container">
+                    <svg class="progress-ring" width="220" height="220">
+                        <circle class="progress-ring-bg" stroke-width="12" fill="transparent" r="95" cx="110" cy="110"/>
+                        <circle id="progress-ring-bar" class="progress-ring-bar" stroke-width="12" fill="transparent" r="95" cx="110" cy="110"/>
+                    </svg>
+                    <div class="progress-display">
+                        <span id="final-percentage">0</span><span class="suffix">%</span>
+                    </div>
+                </div>
+
+                <div class="result-tier-box">
+                    <h3 id="tier-title">Soulmates</h3>
+                    <p id="tier-description">Your cosmic vibrations are completely aligned. A magnificent bond built to withstand the test of time.</p>
+                </div>
+
+                <button id="btn-reset" class="btn-secondary">
+                    <span>Test Another Reality</span>
+                </button>
+            </div>
+        </section>
+
+    </main>
+
+    <div id="toast-notification" class="toast hidden" role="alert" aria-live="assertive">
+        <span class="toast-icon">⚠️</span>
+        <span id="toast-message" class="toast-message">Error processing custom inputs.</span>
+    </div>
+
+   <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
+    
+    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore-compat.js"></script>
+
+    <script src="app.js"></script>
+</body>
+</html>
